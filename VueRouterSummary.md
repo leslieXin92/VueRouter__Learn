@@ -57,10 +57,14 @@ new Vue({
 src / router / index.js：
 
 ```javascript
+// 引入VueRouter
 import VueRouter from "vue-router";
-import One from '../components/One'
-import Two from '../components/Two'
 
+// 引入路由组件
+import One from '../pages/One'
+import Two from '../pages/Two'
+
+// 创建router实例对象，管理一组一组的路由规则
 export default new VueRouter({
     routes: [{
         path: '/one',
@@ -77,7 +81,7 @@ src / App.vue：
 ```vue
 <template>
     <div class="box">
-        <div class="banner">banner</div>
+        <Banner />
         <div class="main">
             <div class="nav">
                 <router-link class="one" active-class="active" to="/One">to One</router-link>
@@ -91,9 +95,11 @@ src / App.vue：
 </template>
 
 <script>
+import Banner from './components/Banner'
 
 export default {
-    name: 'App'
+    name: 'App',
+    components: { Banner }
 }
 </script>
 
@@ -151,7 +157,21 @@ export default {
 </style>
 ```
 
-src / component / One.vue：
+src / components / Banner.vue：
+
+```vue
+<template>
+    <div class="banner">banner</div>
+</template>
+
+<script>
+export default {
+    name: 'Banner'
+}
+</script>
+```
+
+src / pages / One.vue：
 
 ```vue
 <template>
@@ -165,7 +185,7 @@ export default {
 </script>
 ```
 
-src / component / Two.vue：
+src / pages / Two.vue：
 
 ```vue
 <template>
@@ -185,6 +205,7 @@ export default {
 
    ```bash
    npm i vue-router
+   npm i vue-router@3 // vue2版本要安装router3
    ```
 
 2. 应用插件：main.js
@@ -199,11 +220,11 @@ export default {
    // 引入VueRouter
    import VueRouter from "vue-router";
    
-   // 引入components
-   import One from '../components/One'
-   import Two from '../components/Two'
+   // 引入路由组件
+   import One from '../pages/One'
+   import Two from '../pages/Two'
    
-   // 创建并暴露router实例对象，管理一组一组的路由规则
+   // 创建router实例对象，管理一组一组的路由规则
    export default new VueRouter({
        routes: [{
            path: '/one',
@@ -227,4 +248,12 @@ export default {
    <router-view> </router-view>
    ```
 
-   
+
+
+
+# 3. 几个注意点
+
+1. 【路由组件】通常存放在 pages 文件夹，【一般组件】通常放在 components 文件夹。
+2. 通过切换，“ 隐藏 ” 了的路由组件，通常是被销毁的，需要的时候再去挂载。
+3. 每个组件都有自己的 $route 属性，里边存储着自己的路由信息。
+4. 整个应用只有一个 router，可以通过组件的 $router 属性来获取。
