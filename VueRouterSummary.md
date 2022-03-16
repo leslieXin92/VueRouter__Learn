@@ -257,3 +257,280 @@ export default {
 2. 通过切换，“ 隐藏 ” 了的路由组件，通常是被销毁的，需要的时候再去挂载。
 3. 每个组件都有自己的 $route 属性，里边存储着自己的路由信息。
 4. 整个应用只有一个 router，可以通过组件的 $router 属性来获取。
+
+
+
+# 4. 多级路由
+
+## demo：
+
+src / router / index.js：
+
+```javascript
+// 引入VueRouter
+import VueRouter from "vue-router";
+
+// 引入路由组件
+import One from '../pages/One'
+import Two from '../pages/Two'
+import A from '../pages/A'
+import B from '../pages/B'
+
+// 创建router实例对象，管理一组一组的路由规则
+export default new VueRouter({
+    routes: [{
+        path: '/one',
+        component: One
+    }, {
+        path: '/two',
+        component: Two,
+        children: [{
+            path: 'a',
+            component: A
+        }, {
+            path: 'b',
+            component: B
+        }]
+    },]
+})
+```
+
+src / App.vue：
+
+```vue
+<template>
+    <div class="box">
+        <Banner />
+        <div class="main">
+            <div class="nav">
+                <router-link class="one" active-class="active" to="/One">to One</router-link>
+                <router-link class="two" active-class="active" to="/Two">to Two</router-link>
+            </div>
+            <div class="content">
+                <router-view></router-view>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import Banner from './components/Banner'
+
+export default {
+    name: 'App',
+    components: { Banner }
+}
+</script>
+
+<style scoped>
+.box {
+    margin: 00px auto;
+    width: 50%;
+    height: 200px;
+    background-color: springgreen;
+}
+.banner {
+    height: 60px;
+    font-size: 28px;
+    text-align: center;
+    line-height: 60px;
+    background-color: brown;
+}
+.main {
+    display: flex;
+    height: 140px;
+}
+.nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 30%;
+    height: 140px;
+}
+.one,
+.two {
+    width: 80%;
+    height: 50px;
+    outline: 5px solid red;
+    font-size: 24px;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+}
+.active {
+    background-color: brown;
+}
+.content {
+    width: 70%;
+    font-size: 28px;
+    text-align: center;
+    background-color: peru;
+}
+</style>
+```
+
+src / pages / One.vue：
+
+```vue
+<template>
+    <div>One component</div>
+</template>
+
+<script>
+export default {
+    name: 'One'
+}
+</script>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+</style>
+```
+
+src / pages / Two.vue：
+
+```vue
+<template>
+    <div class="box">
+        <div class="nav">
+            <router-link class="a" active-class="active" to="/Two/A">to A</router-link>
+            <router-link class="b" active-class="active" to="/Two/B">to B</router-link>
+        </div>
+        <div class="content">
+            <router-view></router-view>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'Two',
+    mounted () {
+        console.log(this);
+    }
+}
+</script>
+
+<style scoped>
+.box {
+    width: 100%;
+    height: 100%;
+}
+.nav {
+    height: 30%;
+    display: flex;
+    justify-content: space-around;
+    background-color: aqua;
+}
+.a,
+.b {
+    width: 40%;
+    height: 30%;
+    margin: 10px 0;
+    font-size: 24px;
+    color: blueviolet;
+    text-align: center;
+    line-height: 20px;
+    cursor: pointer;
+}
+.content {
+    width: 100%;
+    height: 70%;
+    background-color: green;
+}
+</style>
+```
+
+src / pages / A.vue：
+
+```vue
+<template>
+    <ul>
+        <li>A</li>
+        <li>AA</li>
+        <li>AAA</li>
+    </ul>
+</template>
+
+<script>
+export default {
+    name: 'A'
+}
+</script>
+
+<style scoped>
+li {
+    list-style: none;
+}
+</style>
+```
+
+src / pages / B.vue：
+
+```vue
+<template>
+    <ul>
+        <li>B</li>
+        <li>BB</li>
+        <li>BBB</li>
+    </ul>
+</template>
+
+<script>
+export default {
+    name: 'B'
+}
+</script>
+
+<style scoped>
+li {
+    list-style: none;
+}
+</style>
+```
+
+## summary：
+
+1. 配置路由规则，使用children配置项：src / router / index.js
+
+   ```javascript
+   // 引入VueRouter
+   import VueRouter from "vue-router";
+   
+   // 引入路由组件
+   import One from '../pages/One'
+   import Two from '../pages/Two'
+   import A from '../pages/A'
+   import B from '../pages/B'
+   
+   // 创建router实例对象，管理一组一组的路由规则
+   export default new VueRouter({
+       routes: [{
+           path: '/one',
+           component: One
+       }, {
+           path: '/two',
+           component: Two,
+           children: [{ // 通过children配置子路由
+               path: 'a', // 此处不能写成/a
+               component: A
+           }, {
+               path: 'b', // 此处不能写成/b
+               component: B
+           }]
+       },]
+   })
+   ```
+
+2. 跳转 ( 要写完整路径 )
+
+   ```html
+   <router-link to='/two/a'> </router-link>
+   ```
+
+   
