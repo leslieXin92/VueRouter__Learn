@@ -12,10 +12,7 @@
 
 <script>
 export default {
-    name: 'Two',
-    mounted () {
-        console.log(this);
-    }
+    name: 'Two'
 }
 </script>
 

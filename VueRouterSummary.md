@@ -533,4 +533,114 @@ li {
    <router-link to='/two/a'> </router-link>
    ```
 
-   
+
+
+
+# 5. 路由的query参数
+
+## demo：
+
+src / pages / B.vue：
+
+```vue
+<template>
+    <ul>
+        <li v-for="item in itemList" :key="item.id">
+            
+            <!-- 路由跳转并携带query参数，to的字符串写法 -->
+            <router-link :to="`/two/b/detail?id=${item.id}&massage=${item.massage}`">
+                {{ item.massage }}
+            </router-link>
+
+            <!-- 路由跳转并携带query参数，to的对象写法 -->
+            <router-link :to="{ 
+                path: '/two/b/detail', 
+                query: { 
+                    id: item.id, 
+                    massage: item.massage 
+                    } 
+                }">
+                {{ item.massage }}
+            </router-link>
+            
+        </li>
+        <router-view></router-view>
+    </ul>
+</template>
+
+<script>
+export default {
+    name: 'B',
+    data () {
+        return {
+            itemList: [
+                {
+                    id: '001',
+                    massage: 'B',
+                },
+                {
+                    id: '002',
+                    massage: 'BB',
+                },
+                {
+                    id: '003',
+                    massage: 'BBB',
+                },
+            ],
+        }
+    },
+}
+</script>
+```
+
+src / pages / detail.vue：
+
+```vue
+<template>
+    <ul>
+        <li>id：{{ $route.query.id }}</li>
+        <li>massage：{{ $route.query.massage }}</li>
+    </ul>
+</template>
+
+<script>
+export default {
+    name: 'Detail'
+}
+</script>
+```
+
+## summary：
+
+1. 传递参数：
+
+	```html
+	<!-- 路由跳转并携带query参数，to的字符串写法 -->
+	<router-link 
+	    :to="`/two/b/detail?id=${item.id}&massage=${item.massage}`"
+	>
+	    {{ item.massage }}
+	</router-link>
+	
+	<!-- 路由跳转并携带query参数，to的对象写法 -->
+	<router-link 
+	    :to="{ 
+	             path: '/two/b/detail', 
+	             query: { 
+	                        id: item.id, 
+	                        massage: item.massage 
+	                    } 
+	         }"
+	>
+	    {{ item.massage }}
+	</router-link>
+	```
+
+2. 接收参数：
+
+	```javascript
+	$route.query.id
+	$route.query.massage
+	```
+
+	

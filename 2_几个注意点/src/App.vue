@@ -3,8 +3,8 @@
         <Banner />
         <div class="main">
             <div class="nav">
-                <router-link class="one" active-class="active" to="/One">to One</router-link>
-                <router-link class="two" active-class="active" to="/Two">to Two</router-link>
+                <router-link class="one" active-class="active" to="/one">to One</router-link>
+                <router-link class="two" active-class="active" to="/two">to Two</router-link>
             </div>
             <div class="content">
                 <router-view></router-view>
