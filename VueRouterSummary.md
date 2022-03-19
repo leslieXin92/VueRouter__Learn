@@ -643,4 +643,41 @@ export default {
 	$route.query.massage
 	```
 
-	
+
+
+
+# 6. 命名路由
+
+1. 作用：可以简化路由的跳转。
+
+2. 使用：
+
+   src / router / index.js：
+
+   ```json
+   {
+       path: '/a',
+       component: A,
+       children: [{
+           path: 'b',
+           component: B,
+           children: [{
+               path: 'c',
+               name: 'toC', // 给路由命名
+               component: C
+           }]
+       }]
+   }
+   ```
+
+   template：
+
+   ```html
+   <!-- 简化前，需要写完整的路径 -->
+   <router-link to='/a/b/c'> skip to c </router-link>
+   
+   <!-- 简化后，直接通过name跳转 -->
+   <router-link :to='{name:toC}'> skip to c </router-link>
+   ```
+
+   
