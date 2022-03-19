@@ -26,22 +26,18 @@ export default {
     name: 'B',
     data () {
         return {
-            itemList: [
-                {
-                    id: '001',
-                    massage: 'B',
-                },
-                {
-                    id: '002',
-                    massage: 'BB',
-                },
-                {
-                    id: '003',
-                    massage: 'BBB',
-                },
-            ],
+            itemList: [{
+                id: '001',
+                massage: 'B',
+            }, {
+                id: '002',
+                massage: 'BB',
+            }, {
+                id: '003',
+                massage: 'BBB',
+            }]
         }
-    },
+    }
 }
 </script>
 

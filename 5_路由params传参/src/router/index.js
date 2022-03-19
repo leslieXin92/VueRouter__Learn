@@ -28,5 +28,5 @@ export default new VueRouter({
                 component: Detail,
             }]
         }]
-    },]
+    }]
 })

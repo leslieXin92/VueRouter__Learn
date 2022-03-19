@@ -540,13 +540,48 @@ li {
 
 ## demo：
 
+src / router / index.js：
+
+```javascript
+// 引入VueRouter
+import VueRouter from "vue-router";
+
+// 引入路由组件
+import One from '../pages/One'
+import Two from '../pages/Two'
+import A from '../pages/A'
+import B from '../pages/B'
+import Detail from '../pages/Detail'
+
+// 创建router实例对象，管理一组一组的路由规则
+export default new VueRouter({
+    routes: [{
+        path: '/one',
+        component: One
+    }, {
+        path: '/two',
+        component: Two,
+        children: [{
+            path: 'a',
+            component: A
+        }, {
+            path: 'b',
+            component: B,
+            children: [{
+                path: 'detail',
+                component: Detail,
+            }]
+        }]
+    }]
+})
+```
+
 src / pages / B.vue：
 
 ```vue
 <template>
     <ul>
         <li v-for="item in itemList" :key="item.id">
-            
             <!-- 路由跳转并携带query参数，to的字符串写法 -->
             <router-link :to="`/two/b/detail?id=${item.id}&massage=${item.massage}`">
                 {{ item.massage }}
@@ -562,7 +597,6 @@ src / pages / B.vue：
                 }">
                 {{ item.massage }}
             </router-link>
-            
         </li>
         <router-view></router-view>
     </ul>
@@ -573,24 +607,26 @@ export default {
     name: 'B',
     data () {
         return {
-            itemList: [
-                {
-                    id: '001',
-                    massage: 'B',
-                },
-                {
-                    id: '002',
-                    massage: 'BB',
-                },
-                {
-                    id: '003',
-                    massage: 'BBB',
-                },
-            ],
+            itemList: [{
+                id: '001',
+                massage: 'B',
+            }, {
+                id: '002',
+                massage: 'BB',
+            }, {
+                id: '003',
+                massage: 'BBB',
+            }]
         }
-    },
+    }
 }
 </script>
+
+<style scoped>
+li {
+    list-style: none;
+}
+</style>
 ```
 
 src / pages / detail.vue：
@@ -685,3 +721,162 @@ export default {
 # 7. 路由的params参数
 
 ## demo：
+
+src / router  / index.js：
+
+```javascript
+// 引入VueRouter
+import VueRouter from "vue-router";
+
+// 引入路由组件
+import One from '../pages/One'
+import Two from '../pages/Two'
+import A from '../pages/A'
+import B from '../pages/B'
+import Detail from '../pages/Detail'
+
+// 创建router实例对象，管理一组一组的路由规则
+export default new VueRouter({
+    routes: [{
+        path: '/one',
+        component: One
+    }, {
+        path: '/two',
+        component: Two,
+        children: [{
+            path: 'a',
+            component: A
+        }, {
+            path: 'b',
+            component: B,
+            children: [{
+                name: 'toDetail',
+                path: 'detail/:id/:massage',
+                component: Detail,
+            }]
+        }]
+    }]
+})
+```
+
+src / pages / B.vue：
+
+```vue
+<template>
+    <ul>
+        <li v-for="item in itemList" :key="item.id">
+            <!-- 路由跳转并携带params参数，to的字符串写法 -->
+            <router-link :to="`/two/b/detail/${item.id}/${item.massage}`">
+                {{ item.massage }}
+            </router-link>
+
+            <!-- 路由跳转并携带params参数，to的对象写法 -->
+            <router-link :to="{ 
+                name:'toDetail', 
+                params: { 
+                    id: item.id, 
+                    massage: item.massage 
+                    }
+                }">
+                {{ item.massage }}
+            </router-link>
+        </li>
+        <router-view></router-view>
+    </ul>
+</template>
+
+<script>
+export default {
+    name: 'B',
+    data () {
+        return {
+            itemList: [{
+                id: '001',
+                massage: 'B',
+            }, {
+                id: '002',
+                massage: 'BB',
+            }, {
+                id: '003',
+                massage: 'BBB',
+            }]
+        }
+    }
+}
+</script>
+
+<style scoped>
+li {
+    list-style: none;
+}
+</style>
+```
+
+src / pages / detail.vue：
+
+```vue
+<template>
+    <ul>
+        <li>id：{{ $route.params.id }}</li>
+        <li>massage：{{ $route.params.massage }}</li>
+    </ul>
+</template>
+
+<script>
+export default {
+    name: 'Detail',
+    mounted () {
+        console.log(this.$route);
+    }
+}
+</script>
+<style scoped>
+li {
+    list-style: none;
+}
+</style>
+```
+
+## summary：
+
+1. 配置路由，声明接收params参数：
+
+   ```json
+   children: [{
+       name: 'toDetail',
+       path: 'detail/:id/:massage',
+       component: Detail,
+   }]
+   ```
+
+2. 传递参数：
+
+   ```html
+   <!-- 路由跳转并携带params参数，to的字符串写法 -->
+   <router-link :to="`/two/b/detail/${item.id}/${item.massage}`">
+       {{ item.massage }}
+   </router-link>
+   
+   <!-- 路由跳转并携带params参数，to的对象写法 -->
+   <router-link :to="{ 
+                     	name:'toDetail',  // 必须使用name，不能使用path
+                     	params: { 
+                     		id: item.id, 
+                     		massage: item.massage 
+                     		}
+                     }">
+       {{ item.massage }}
+   </router-link>
+   ```
+
+3. 接收参数：
+
+   ```javascript
+   $route.params.id
+   $route.params.massage
+   ```
+
+   
+
+
+
