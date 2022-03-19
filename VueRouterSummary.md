@@ -680,4 +680,8 @@ export default {
    <router-link :to='{name:toC}'> skip to c </router-link>
    ```
 
-   
+
+
+# 7. 路由的params参数
+
+## demo：
