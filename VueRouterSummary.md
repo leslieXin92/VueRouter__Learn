@@ -1298,3 +1298,16 @@ li {
 2. 名称：
    1. activated：路由组件被激活时触发。
    2. deactivated：路由组件失活时触发。
+
+
+
+# 13. 路由守卫
+
+## 13.1 全局前置路由守卫
+
+src / router / index.js：
+
+```javascript
+
+```
+
