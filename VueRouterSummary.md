@@ -1511,3 +1511,112 @@ const router = new VueRouter({
 export default router
 ```
 
+## 13.3 组件内路由守卫
+
+src / router / index.js：
+
+```javascript
+// 引入VueRouter
+import VueRouter from "vue-router";
+
+// 引入路由组件
+import One from '../pages/One'
+import Two from '../pages/Two'
+import A from '../pages/A'
+import B from '../pages/B'
+import Detail from '../pages/Detail'
+
+// 创建router实例对象，管理一组一组的路由规则
+const router = new VueRouter({
+    routes: [{
+        name: 'toOne',
+        path: '/one',
+        component: One,
+        meta: { isAuth: true, title: 'One！！！' }
+    }, {
+        name: 'toTwo',
+        path: '/two',
+        component: Two,
+        meta: { isAuth: true, title: 'Two！！！' },
+        children: [{
+            name: 'toA',
+            path: 'a',
+            component: A,
+            meta: { title: 'A！！！' }
+        }, {
+            name: 'toB',
+            path: 'b',
+            component: B,
+            meta: { title: 'B！！！' },
+            children: [{
+                name: 'toDetail',
+                path: 'detail/:id/:massage',
+                component: Detail,
+                meta: { title: 'Detail！！！' },
+                props ($route) {
+                    return {
+                        id: $route.params.id,
+                        massage: $route.params.massage
+                    }
+                }
+            }]
+        }]
+    }]
+})
+
+export default router
+```
+
+src / pages / One.vue：
+
+```vue
+<template>
+    <div>One component</div>
+</template>
+
+<script>
+export default {
+    name: 'One',
+    // 通过路由规则，进入该组件之前执行
+    beforeRouteEnter (to, from, next) {
+        if (to.meta.isAuth) {
+            if (localStorage.getItem('routerDemo') === 'test') {
+                next()
+            } else {
+                alert('no right to skip')
+            }
+        } else {
+            next()
+        }
+    },
+    // 通过路由规则，离开该组件之前执行
+    beforeRouteLeave (to, from, next) {
+        console.log('beforeRouteLeave')
+        next()
+    }
+}
+</script>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+</style>
+```
+
+
+
+# 14. 路由器的两种工作模式
+
+1. url 中的的 hash 值：/#/ 后边的内容就是 hash 值。
+2. hash 值不会包含在 http 请求中，即 hash 值不会带给服务器。
+3. hash 模式：
+   1. url 中永远带着 # 号，不美观。
+   2. 若以后将地址通过第三方 app 分享，app 校验严格，则地址会被标记不合法。
+   3. 兼容性较好。
+4. history 模式：
+   1. url 干净美观。
+   2. 兼容性相比 hash 模式较差。
+   3. 应用部署上线时需要后端人员支持，解决刷新页面服务端 404 的问题 ( 路由会被当做路径去访问 ) 。
