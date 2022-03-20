@@ -1225,7 +1225,7 @@ button {
 
 3. tips：
 
-   1. include后边写组件名！！！
+   1. include 后边写组件名！！！
 
    2. 如果缓存多个组件写成数组形式：
 
@@ -1235,4 +1235,66 @@ button {
       </keep-alive>
       ```
 
-      
+
+
+# 12. 两个新的生命周期
+
+## demo：
+
+```vue
+<template>
+    <ul>
+        <li>
+            <h2 :style="{opacity:opacityVal}">{{ name }}</h2>
+        </li>
+        <li>
+            A
+            <input type="text">
+        </li>
+        <li>
+            AA
+            <input type="text">
+        </li>
+        <li>
+            AAA
+            <input type="text">
+        </li>
+    </ul>
+</template>
+
+<script>
+export default {
+    name: 'A',
+    data () {
+        return {
+            name: 'yahoo',
+            opacityVal: 1
+        }
+    },
+    activated () {
+        this.timer = setInterval(() => {
+            if (this.opacityVal <= 0) {
+                this.opacityVal = 1
+            }
+            this.opacityVal -= 0.01
+        }, 16)
+    },
+    deactivated () {
+        clearInterval(this.time)
+    }
+}
+</script>
+
+<style scoped>
+li {
+    list-style: none;
+}
+</style>
+```
+
+## summary：
+
+1. 作用：路由组件所独有的两个钩子，用于捕获路由组件的激活状态。
+2. 名称：
+   1. activated：路由组件被激活时触发。
+   2. deactivated：路由组件失活时触发。
