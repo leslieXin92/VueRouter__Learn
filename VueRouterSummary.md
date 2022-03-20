@@ -876,7 +876,127 @@ li {
    $route.params.massage
    ```
 
+
+
+
+# 8. 路由的props配置
+
+## demo：
+
+src / router / index.js：
+
+```javascript
+// 引入VueRouter
+import VueRouter from "vue-router";
+
+// 引入路由组件
+import One from '../pages/One'
+import Two from '../pages/Two'
+import A from '../pages/A'
+import B from '../pages/B'
+import Detail from '../pages/Detail'
+
+// 创建router实例对象，管理一组一组的路由规则
+export default new VueRouter({
+    routes: [{
+        path: '/one',
+        component: One
+    }, {
+        path: '/two',
+        component: Two,
+        children: [{
+            path: 'a',
+            component: A
+        }, {
+            path: 'b',
+            component: B,
+            children: [{
+                name: 'toDetail',
+                path: 'detail/:id/:massage',
+                component: Detail,
+
+                // 写法一：对象写法，
+                // 对象中所有的key-value最终都会通过props传给Detail组件，死数据。
+                props: { id: '001', massage: 'B' },
+
+                // 写法二：布尔值写法，
+                // 布尔值为true，则把路由所有的params参数通过props传递给Detail组件，
+                // query参数不行。
+                props: true,
+
+                // 写法三：函数写法，
+                // 函数返回的对象中每一组key-value都会通过props传递给Detail组件。
+                props ($route) {
+                    return {
+                        id: $route.params.id,
+                        massage: $route.params.massage
+                    }
+                }
+            }]
+        }]
+    }]
+})
+```
+
+src / pages / Detail.vue：
+
+```vue
+<template>
+    <ul>
+        <li>id：{{ id }}</li>
+        <li>massage：{{ massage }}</li>
+    </ul>
+</template>
+
+<script>
+export default {
+    name: 'Detail',
+    props: ['id', 'massage']
+}
+</script>
+<style scoped>
+li {
+    list-style: none;
+}
+</style>
+```
+
+## summary：
+
+1. 作用：让路由更方便地收到参数。
+
+2. 写法：src / router / index.js
+
+   ```json
+   {
+       name: 'toDetail',
+       path: 'detail/:id/:massage',
+       component: Detail,
    
+       // 写法一：对象写法，
+       // 对象中所有的key-value最终都会通过props传给Detail组件，死数据。
+       props: { id: '001', massage: 'B' },
+   
+       // 写法二：布尔值写法，
+       // 布尔值为true，则把路由所有的params参数通过props传递给Detail组件，
+       // query参数不行。
+       props: true,
+   
+       // 写法三：函数写法，
+       // 函数返回的对象中每一组key-value都会通过props传递给Detail组件。
+       props ($route) {
+           return {
+               id: $route.params.id,
+               massage: $route.params.massage
+           }
+       }
+   }
+   ```
 
+3. 接收数据：src / pages / Detail.vue
 
+   ```javascript
+   props: ['id', 'massage']
+   ```
 
+   
