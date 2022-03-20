@@ -1018,4 +1018,195 @@ li {
    <router-link replace> xxx </router-link>
    ```
 
+
+
+# 10. 编程式路由导航
+
+## demo：
+
+src / router / index.js：
+
+```javascript
+// 引入VueRouter
+import VueRouter from "vue-router";
+
+// 引入路由组件
+import One from '../pages/One'
+import Two from '../pages/Two'
+import A from '../pages/A'
+import B from '../pages/B'
+import Detail from '../pages/Detail'
+
+// 创建router实例对象，管理一组一组的路由规则
+export default new VueRouter({
+    routes: [{
+        path: '/one',
+        component: One
+    }, {
+        path: '/two',
+        component: Two,
+        children: [{
+            path: 'a',
+            component: A
+        }, {
+            path: 'b',
+            component: B,
+            children: [{
+                name: 'toDetail',
+                path: 'detail/:id/:massage',
+                component: Detail,
+                props ($route) {
+                    return {
+                        id: $route.params.id,
+                        massage: $route.params.massage
+                    }
+                }
+            }]
+        }]
+    }]
+})
+```
+
+src / components / Banner.vue：
+
+```vue
+<template>
+    <div class="banner">
+        banner
+        <button @click="back"> back </button>
+        <button @click="forward"> forward </button>
+        <button @click="go"> go </button>
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'Banner',
+    methods: {
+        back () {
+            this.$router.back()
+        },
+        forward () {
+            this.$router.forward()
+        },
+        go () {
+            this.$router.go(-2)
+        }
+    }
+}
+</script>
+<style scoped>
+button {
+    margin-left: 5px;
+}
+</style>
+```
+
+src / pages / B.vue：
+
+```vue
+<template>
+    <ul>
+        <li v-for="item in itemList" :key="item.id">
+            <router-link :to="{ 
+                name:'toDetail', 
+                params: { 
+                    id: item.id, 
+                    massage: item.massage 
+                    }
+                }">
+                {{ item.massage }}
+            </router-link>
+            <button @click="viewByPush(item)">push view</button>
+            <button @click="viewByReplace(item)">replace view</button>
+        </li>
+        <router-view></router-view>
+    </ul>
+</template>
+
+<script>
+export default {
+    name: 'B',
+    data () {
+        return {
+            itemList: [{
+                id: '001',
+                massage: 'B',
+            }, {
+                id: '002',
+                massage: 'BB',
+            }, {
+                id: '003',
+                massage: 'BBB',
+            }]
+        }
+    },
+    methods: {
+        viewByPush (item) {
+            this.$router.push({
+                name: 'toDetail',
+                params: {
+                    id: item.id,
+                    massage: item.massage
+                }
+            })
+        },
+        viewByReplace (item) {
+            this.$router.replace({
+                name: 'toDetail',
+                params: {
+                    id: item.id,
+                    massage: item.massage
+                }
+            })
+        }
+    }
+}
+</script>
+
+<style scoped>
+li {
+    list-style: none;
+}
+button {
+    margin-left: 5px;
+}
+</style>
+```
+
+## summary：
+
+1. 作用：不借助<router-link>实现路由跳转，让路由跳转更加灵活。
+
+2. 写法：
+
+   ```javascript
+   // push
+   this.$router.push({
+       name: 'toDetail',
+       params: {
+           id: item.id,
+           massage: item.massage
+       }
+   })
+   
+   // replace
+   this.$router.replace({
+       name: 'toDetail',
+       params: {
+           id: item.id,
+           massage: item.massage
+       }
+   })
+   
+   // back
+   this.$router.back()
+   
+   // forward
+   this.$router.forward()
+   
+   // go,number为正数，往前跳转number次，为负数则往后跳转number次。
+   this.$router.go(number)
+   ```
+
    
