@@ -1209,4 +1209,18 @@ button {
    this.$router.go(number)
    ```
 
+
+
+# 11. 缓存路由组件
+
+1. 作用：让不展示的路由组件保持挂载，不被销毁。
+
+2. 实现：
+
+   ```html
+   <keep-alive include="A"> // include后边写组件名！！！
+       <router-view> </router-view>
+   </keep-alive>
+   ```
+
    
