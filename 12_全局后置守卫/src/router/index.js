@@ -13,24 +13,28 @@ const router = new VueRouter({
     routes: [{
         name: 'toOne',
         path: '/one',
-        component: One
+        component: One,
+        meta: { title: 'One！！！' }
     }, {
         name: 'toTwo',
         path: '/two',
         component: Two,
-        meta: { isAuth: true },
+        meta: { isAuth: true, title: 'Two！！！' },
         children: [{
             name: 'toA',
             path: 'a',
-            component: A
+            component: A,
+            meta: { title: 'A！！！' }
         }, {
             name: 'toB',
             path: 'b',
             component: B,
+            meta: { title: 'B！！！' },
             children: [{
                 name: 'toDetail',
                 path: 'detail/:id/:massage',
                 component: Detail,
+                meta: { title: 'Detail！！！' },
                 props ($route) {
                     return {
                         id: $route.params.id,
@@ -44,7 +48,6 @@ const router = new VueRouter({
 
 // 全局前置路由守卫，初始化和跳转前会执行回调
 router.beforeEach((to, from, next) => {
-    // if (to.name === 'toA' || to.name === 'toB') {
     if (to.meta.isAuth) {
         if (localStorage.getItem('routerDemo') === 'test') {
             next()
@@ -54,6 +57,11 @@ router.beforeEach((to, from, next) => {
     } else {
         next()
     }
+})
+
+// 全局后置路由守卫，初始化和跳转后会执行回调
+router.afterEach((to, from) => {
+    document.title = to.meta.title
 })
 
 export default router
