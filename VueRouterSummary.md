@@ -1218,9 +1218,21 @@ button {
 2. 实现：
 
    ```html
-   <keep-alive include="A"> // include后边写组件名！！！
+   <keep-alive include="A">
        <router-view> </router-view>
    </keep-alive>
    ```
 
-   
+3. tips：
+
+   1. include后边写组件名！！！
+
+   2. 如果缓存多个组件写成数组形式：
+
+      ```html
+      <keep-alive :include="['A','B']">
+          <router-view> </router-view>
+      </keep-alive>
+      ```
+
+      
